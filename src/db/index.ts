@@ -1,11 +1,12 @@
-import pg from 'pg'
+import pg from 'pg';
+
 const { Pool } = pg
 
 const pool = new Pool({
     host: 'localhost',
     user: 'yasir',
     password: process.env.DB_PASSWORD,
-    database: 'pos_receipt',
+    database: 'yasir_db',
     port: 5433,
 
 });

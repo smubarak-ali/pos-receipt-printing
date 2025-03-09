@@ -1,12 +1,11 @@
-
+import { Request, Response } from 'express';
 import ReceiptPrinterEncoder from '@point-of-sale/receipt-printer-encoder';
 import SystemReceiptPrinter from '@point-of-sale/system-receipt-printer';
-import { Request, Response } from 'express';
 
 export class PrintController {
     constructor() { }
 
-    print = async (req: Request, res: Response) => {
+    printDevago = async (req: Request, res: Response) => {
         const encoder = new ReceiptPrinterEncoder();
 
         const data = encoder
