@@ -35,4 +35,13 @@ export class MedicineController {
             res.status(400).send(error);
         }
     }
+
+    delete = async (req: Request, res: Response) => {
+        try {
+            await this.medicineService.delete(+req.params.id);
+            res.send({ status: 'OK' });
+        } catch (error) {
+            res.status(400).send(error);
+        }
+    }
 }

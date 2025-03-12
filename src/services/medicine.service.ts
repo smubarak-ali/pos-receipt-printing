@@ -38,4 +38,15 @@ export class MedicineService {
             throw error;
         }
     }
+
+    delete = async (id: number) => {
+        const query = 'DELETE FROM medicine WHERE id = $1';
+
+        try {
+            await db.query(query, [id]);
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
 }
