@@ -7,33 +7,27 @@ export class PrintService {
     constructor() { }
 
     print = async (receipt: PrintRequest) => {
+        if (receipt == null || receipt == undefined || Object.keys(receipt).length <= 1) {
+            return;
+        }
+
         const encoder = new ReceiptPrinterEncoder({
             feedBeforeCut: 6
         });
 
         const data = encoder
-            .initialize()
-            .line('The quick brown fox jumps over the lazy dog')
-            .line('0123456789')
-            .line('!@#$%^&*()')
-            .line('abcdefghijklmnopqrstuvwxyz')
-            .line('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-            .line('The quick brown fox jumps over the lazy dog')
-            .line('0123456789')
-            .line('!@#$%^&*()')
-            .line('abcdefghijklmnopqrstuvwxyz')
-            .line('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-            .line('https://nielsleenheer.com')
-            .line('--------------------------------')
-            .line('')
-            .line('')
-            .line('')
-            .line('')
-            .line('')
-            .line('')
+            .initialize();
+
+        encoder
+            .invert(true)
+            .box(
+                { align: 'center', style: 'none', marginLeft: 10 }, 
+                'Sale Invoice')
+            .invert(false)
+            .rule({ style: 'single' })
             .cut();
 
-        /* Print the receipt */
+
         const receiptPrinter = new SystemReceiptPrinter({
             name: 'PRP088 III Printer',
         });
