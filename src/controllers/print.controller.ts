@@ -10,7 +10,7 @@ export class PrintController {
 
     printDevago = async (req: Request, res: Response) => {
         const data: PrintRequest = req.body;
-        await this.printService.print(data);
+        // await this.printService.print(data);
         res.send({ status: 'OK' });
     }
 }

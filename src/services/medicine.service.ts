@@ -1,5 +1,5 @@
 import { Medicine } from "../utils/model/medicine";
-import * as db from "../db/index.ts";
+import * as db from "../db/index";
 
 export class MedicineService {
 
