@@ -21,10 +21,8 @@ export class PrintService {
             name: 'PRP088 III Printer',
         });
 
-        // const data = encoder
-        //     .initialize();
-
         encoder
+            .initialize()
             .invert(true)
             .bold()
             .box(
@@ -35,48 +33,58 @@ export class PrintService {
             .newline(2);
 
         encoder
+            .rule();
 
-        // const itemsArr = new Array();
-        // const headings = new Array<string>();
-        // headings.push("Product");
-        // headings.push("Qty");
-        // headings.push("Price");
-        // headings.push("GST Rate");
-        // headings.push("GST");
-        // headings.push("Total");
-        // itemsArr.push(headings);
+        const headings = new Array<string>();
+        headings.push("Product");
+        headings.push("Qty");
+        headings.push("Price");
+        headings.push("GST Rate");
+        headings.push("GST");
+        headings.push("Total");
 
-        // receipt.items.map(x => {
-        //     const strArr = new Array<string>();
-        //     strArr.push(x.productName);
-        //     strArr.push(x.quantity);
-        //     strArr.push(x.price)
-        //     strArr.push('0.00');
-        //     strArr.push('0.00');
-        //     strArr.push(x.totalAmount);
-        //     itemsArr.push(strArr);
-        // });
+        encoder
+            .table(
+                this.tableHeader(),
+                [headings]
+            );
 
-        // // console.log("itemsArr: ", JSON.stringify(itemsArr));
-        // encoder
-        //     .table(
-        //         [
-        //             { width: 18, marginRight: 0, align: 'left' },
-        //             { width: 3, align: 'right' },
-        //             { width: 7, align: 'right' },
-        //             { width: 7, align: 'right' },
-        //             { width: 6, align: 'right' },
-        //             { width: 6, align: 'right' }
-        //         ],
-        //         itemsArr
-        //     )
+        encoder
+            .rule();
 
-        //     .newline(2)
-        //     .rule({ style: 'single'})
-        //     .cut();
+        receipt.items.map(x => {
+            const strArr = new Array<string>();
+            strArr.push(x.productName);
+            strArr.push(x.quantity);
+            strArr.push(x.price)
+            strArr.push('0.00');
+            strArr.push('0.00');
+            strArr.push(x.totalAmount);
 
+            encoder
+                .table(
+                    this.tableHeader(),
+                    [strArr]
+                )
+                .rule()
+        });
+
+        encoder
+            .cut();
+        
         await receiptPrinter.print(encoder.encode());
         await receiptPrinter.disconnect();
+    }
+
+    private tableHeader = () => {
+        const arr = new Array<any>();
+        arr.push({ width: 18, marginRight: 0, align: 'left' });
+        arr.push({ width: 3, align: 'right' });
+        arr.push({ width: 7, align: 'right' });
+        arr.push({ width: 7, align: 'right' });
+        arr.push({ width: 6, align: 'right' });
+        arr.push({ width: 6, align: 'right' });
+        return arr;
     }
 
 }   
