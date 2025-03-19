@@ -57,7 +57,7 @@ export class PrintService {
             strArr.push(x.productName);
             strArr.push(x.quantity);
             strArr.push(x.price)
-            strArr.push('0.00');
+            strArr.push('0');
             strArr.push('0.00');
             strArr.push(x.totalAmount);
 
@@ -70,7 +70,9 @@ export class PrintService {
         });
 
         encoder
-            .cut();
+            .newline(2)
+            .cut()
+            .newline();
         
         await receiptPrinter.print(encoder.encode());
         await receiptPrinter.disconnect();
