@@ -1,8 +1,9 @@
 import ReceiptPrinterEncoder from '@point-of-sale/receipt-printer-encoder';
 import SystemReceiptPrinter from '@point-of-sale/system-receipt-printer';
 import { PrintRequest } from "../utils/model/print";
-import { getRandomNumber } from "../utils/helper/number.helper";
+import { get13DigitNumber, getRandomNumber } from "../utils/helper/number.helper";
 import numbro from 'numbro';
+import dayjs from "dayjs";
 
 export class PrintService {
 
@@ -16,26 +17,35 @@ export class PrintService {
         const encoder = new ReceiptPrinterEncoder({
             language: 'esc-pos',
             columns: 48,
-            feedBeforeCut: 4
+            feedBeforeCut: 3
         });
 
         const receiptPrinter = new SystemReceiptPrinter({
             name: 'PRP088 III Printer',
         });
 
+        const invoiceNo = getRandomNumber();
         encoder
             .initialize()
             .invert(true)
             .bold()
-            .font("A")
-            .box(
-                { align: 'center', style: 'none', paddingRight: 0 },
-                'Sales Invoice'
+            .font('A')
+            .box
+            (
+                { align: 'center', style: 'none' },
+                'SALES INVOICE'
             )
             .invert(false)
-            .newline(2);
+            .newline();
 
         encoder
+            .align('center')
+            .line('ABDUL HADI MEDICAL & GENERAL STORE')
+            .align('center')
+            .line('Shop No. 2, Plot # 1372/2, Azizabad')
+            .align('center')
+            .line('Contact No. 0306-3736034')
+            .newline()
             .rule();
 
         encoder
@@ -46,7 +56,7 @@ export class PrintService {
                     { width: 24, align: 'right' }
                 ],
                 [
-                    [`Invoice # ${getRandomNumber()}`, `Date: ${receipt.date}`],
+                    [`Invoice # ${invoiceNo}`, `Date: ${dayjs(receipt.date).format("MM/DD/YYYY HH:mm")}`],
                     [`Cashier: 700013`, `Customer: SYED YASIR`]
                 ]
             )
@@ -72,15 +82,14 @@ export class PrintService {
 
         let totalItems = 0;
         receipt.items.map(x => {
-            totalItems += totalItems + (+x.quantity);
-            // console.log(" quantity: ", x.quantity);
+            totalItems += (+x.quantity);
             const strArr = new Array<string>();
             strArr.push(x.productName);
             strArr.push(`${x.quantity}`);
-            strArr.push(`${numbro(x.price).format({ mantissa: 2})}`);
+            strArr.push(`${numbro(x.price).format({ mantissa: 1 })}`);
             strArr.push('0');
-            strArr.push('0.00');
-            strArr.push(x.totalAmount);
+            strArr.push('0');
+            strArr.push(`${numbro(x.totalAmount).format({ mantissa: 1 })}`);
 
             encoder
                 .table(
@@ -94,12 +103,12 @@ export class PrintService {
             .table
             (
                 [
-                    { width: 25, align: 'left' },
-                    { width: 15, align: 'right' }
+                    { width: 19, align: 'left' },
+                    { width: 29, align: 'left' }
                 ],
                 [
-                    [`Item Sold       ${totalItems}`, ''],
-                    [`No. of Item(s)  ${receipt.items.length}`]
+                    [`Item Sold`, `${totalItems}`],
+                    [`No. of Item(s)`, `${receipt.items.length}`]
                 ]
             )
             .rule();
@@ -112,22 +121,17 @@ export class PrintService {
                     { width: 18, align: 'right' }
                 ],
                 [
-                    // ['Sales Tax: ', '0.00'],
                     ['Total Amount: ', receipt.totalAmount],
                     ['Total Discount: ', receipt.totalDiscount],
-                    // ['POS Service Fee: ', '0'],
-                    // ['Charge (Payable): ', '0'],
                     ['Net Total (Receivable): ', receipt.netTotal]
                 ]
-            );
-
-        encoder
-            .text('Tenders')
+            )
             .rule();
 
         encoder
+            .align("left")
             .line('Payment Method');
-        
+
         encoder
             .table
             (
@@ -136,13 +140,18 @@ export class PrintService {
                     { width: 24, align: 'right' }
                 ],
                 [
-                    ["CASH", `RS ${receipt.netTotal}`]
+                    ["CASH", `${numbro(receipt.netTotal).formatCurrency({ mantissa: 2, thousandSeparated: true, currencySymbol: 'Rs. ', currencyPosition: "prefix"})}`]
                 ]
             )
-            .newline();
-            
+            .newline()
+            .align('center')
+            .line('** Thanks for Shopping **');
+
+        const barcode = get13DigitNumber();
         encoder
-            .newline(2)
+            .align('center')
+            .barcode(`${barcode}`, 'ean13')
+            .newline()
             .cut();
 
         await receiptPrinter.print(encoder.encode());
@@ -151,12 +160,12 @@ export class PrintService {
 
     private tableHeader = () => {
         const arr = new Array<any>();
-        arr.push({ width: 19, align: 'left' });
+        arr.push({ width: 18, align: 'left' });
         arr.push({ width: 3, align: 'right' });
         arr.push({ width: 7, align: 'right' });
         arr.push({ width: 7, align: 'right' });
         arr.push({ width: 6, align: 'right' });
-        arr.push({ width: 6, align: 'right' });
+        arr.push({ width: 7, align: 'right' });
         return arr;
     }
 
