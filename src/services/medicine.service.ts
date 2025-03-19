@@ -16,7 +16,7 @@ export class MedicineService {
     }
 
     getAll = async () => {
-        const query = 'SELECT * FROM medicine';
+        const query = 'SELECT * FROM medicine order by name';
 
         try {
             const { rows } = await db.query(query, []);

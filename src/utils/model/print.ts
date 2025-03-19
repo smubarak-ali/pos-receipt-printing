@@ -1,10 +1,11 @@
 export interface PrintRequest {
+    date: Date;
     items: PrintItems[];
-    totalAmount: number;
-    totalDiscount: number;
-    posServiceFee: number;
-    charge: number;
-    netTotal: number;
+    totalAmount: string;
+    totalDiscount: string;
+    posServiceFee: string;
+    charge: string;
+    netTotal: string;
 }
 
 export interface PrintItems {
@@ -12,8 +13,9 @@ export interface PrintItems {
     productName: string;
     quantity: string;
     price: string;
-    gstRate: number;
-    gstAmount: number;
+    gstRate: string;
+    gstAmount: string;
     totalAmount: string;
 }
+
 
