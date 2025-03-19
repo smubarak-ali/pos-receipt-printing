@@ -2,6 +2,7 @@ import ReceiptPrinterEncoder from '@point-of-sale/receipt-printer-encoder';
 import SystemReceiptPrinter from '@point-of-sale/system-receipt-printer';
 import { PrintRequest } from "../utils/model/print";
 import { getRandomNumber } from "../utils/helper/number.helper";
+import numbro from 'numbro';
 
 export class PrintService {
 
@@ -26,6 +27,7 @@ export class PrintService {
             .initialize()
             .invert(true)
             .bold()
+            .font("A")
             .box(
                 { align: 'center', style: 'none', paddingRight: 0 },
                 'Sales Invoice'
@@ -44,10 +46,11 @@ export class PrintService {
                     { width: 24, align: 'right' }
                 ],
                 [
-                    [`Invoice # ${getRandomNumber()}`, `Date: ${receipt.date.toISOString()}`],
+                    [`Invoice # ${getRandomNumber()}`, `Date: ${receipt.date}`],
                     [`Cashier: 700013`, `Customer: SYED YASIR`]
                 ]
             )
+            .newline()
             .rule();
 
         const headings = new Array<string>();
@@ -70,11 +73,11 @@ export class PrintService {
         let totalItems = 0;
         receipt.items.map(x => {
             totalItems += totalItems + (+x.quantity);
-
+            // console.log(" quantity: ", x.quantity);
             const strArr = new Array<string>();
             strArr.push(x.productName);
-            strArr.push(x.quantity);
-            strArr.push(x.price);
+            strArr.push(`${x.quantity}`);
+            strArr.push(`${numbro(x.price).format({ mantissa: 2})}`);
             strArr.push('0');
             strArr.push('0.00');
             strArr.push(x.totalAmount);
@@ -105,16 +108,16 @@ export class PrintService {
             .table
             (
                 [
-                    { width: 25, align: 'right' },
-                    { width: 23, align: 'right' }
+                    { width: 30, align: 'right' },
+                    { width: 18, align: 'right' }
                 ],
                 [
-                    ['Sales Tax: ', '0.00'],
+                    // ['Sales Tax: ', '0.00'],
                     ['Total Amount: ', receipt.totalAmount],
                     ['Total Discount: ', receipt.totalDiscount],
-                    ['POS Service Fee: ', '0'],
-                    ['Charge (Payable): ', '0'],
-                    ['Net Total (Received): ', receipt.netTotal]
+                    // ['POS Service Fee: ', '0'],
+                    // ['Charge (Payable): ', '0'],
+                    ['Net Total (Receivable): ', receipt.netTotal]
                 ]
             );
 
