@@ -8,7 +8,7 @@ export class PrintController {
 
     constructor() { }
 
-    printDevago = async (req: Request, res: Response) => {
+    printAbdulHadi = async (req: Request, res: Response) => {
         const data: PrintRequest = req.body;
         await this.printService.print(data);
         res.send({ status: 'OK', data: req.body });

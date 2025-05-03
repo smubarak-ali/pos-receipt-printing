@@ -6,9 +6,9 @@ export class MedicineController {
 
     constructor() { }
 
-    create = async (req: Request, res: Response) => {
+    save = async (req: Request, res: Response) => {
         try {
-            const data = await this.medicineService.create(req.body);
+            const data = await this.medicineService.save(req.body);
             res.send(data);
 
         } catch (error) {

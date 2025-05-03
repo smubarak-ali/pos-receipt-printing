@@ -3,8 +3,13 @@ import * as db from "../db/index";
 
 export class MedicineService {
 
-    create = async (data: Medicine) => {
-        const query = 'INSERT INTO medicine (name, price) VALUES ($1, $2) RETURNING *';
+    save = async (data: Medicine) => {
+        const query = `
+            INSERT INTO medicine (name, price) VALUES ($1, $2)
+            on conflict (name)
+            do update set price=$2
+            RETURNING *
+        `;
 
         try {
             const { rows } = await db.query(query, [data.name, data.price]);

@@ -6,8 +6,8 @@ const printCtrl = new PrintController();
 const medicineCtrl = new MedicineController();
 const routes = Router();
 
-routes.post('/v1/print/d', printCtrl.printDevago);
-routes.post('/v1/medicine', medicineCtrl.create);
+routes.post('/v1/print/d', printCtrl.printAbdulHadi);
+routes.post('/v1/medicine', medicineCtrl.save);
 routes.get('/v1/medicine', medicineCtrl.getAll);
 routes.delete('/v1/medicine/:id', medicineCtrl.delete);
 routes.get('/v1/medicine/search', medicineCtrl.search);
