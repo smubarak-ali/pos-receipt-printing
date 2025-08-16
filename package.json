@@ -14,14 +14,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@point-of-sale/receipt-printer-encoder": "^3.0.2",
-    "@point-of-sale/system-receipt-printer": "^2.0.1",
-    "body-parser": "^1.20.3",
-    "cors": "^2.8.5",
-    "dayjs": "^1.11.13",
-    "express": "^4.21.2",
-    "numbro": "^2.5.0",
-    "pg": "^8.13.3"
+    "body-parser": "~2.2.0",
+    "cors": "~2.8.5",
+    "express": "~4.21.2",
+    "pg": "~8.16.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

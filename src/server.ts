@@ -7,7 +7,7 @@ import { routes } from './routes';
 const app = express();
 
 const corsOptions = {
-    origin: `http://localhost:4200`,
+    origin: ['http://localhost:4200', 'http://[2001:f40:95a:162c:b622:5f85:7f13:f3b2]:8085'],
     methods: ['*']
 };
 
